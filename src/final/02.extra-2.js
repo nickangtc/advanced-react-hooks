@@ -28,6 +28,18 @@ function asyncReducer(state, action) {
   }
 }
 
+/**
+ * Designed to handle complexities of async calls, like:
+ * - fetching data from an API
+ * - rendering a loading state
+ * - rendering a fallback state
+ * - rendering a error state
+ * - rendering a success state
+ *
+ * Exposes a `run` function that is used in component to make arbitrary async calls.
+ * @param {*} initialState
+ * @returns
+ */
 function useAsync(initialState) {
   const [state, dispatch] = React.useReducer(asyncReducer, {
     status: 'idle',
@@ -68,6 +80,8 @@ function PokemonInfo({pokemonName}) {
     status: pokemonName ? 'pending' : 'idle',
   })
 
+  // this whole thing is so convoluted, but it is a useful evil
+  // because you don't need to dispatch actions based on async call's outcome anymore
   React.useEffect(() => {
     if (!pokemonName) {
       return
